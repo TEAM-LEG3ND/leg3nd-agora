@@ -1,0 +1,13 @@
+version: '3'
+
+services: # 컨테이너 설정
+  mysql:
+    image: mysql:8.0.32
+    restart: always
+    volumes:
+      - ./volume/mysql:/var/lib/mysql
+    environment: # 컨테이너 안의 환경변수 설정
+      - MYSQL_ROOT_PASSWORD=test123
+      - MYSQL_DATABASE=agora
+    ports: # -p 옵션과 동일
+      - "3306:3306"
