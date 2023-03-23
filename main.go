@@ -15,7 +15,7 @@ func CreateAccount(ctx context.Context, client *ent.Client) (*ent.Account, error
 		Create().
 		SetEmail("limdongyoung0@gmail.com").
 		SetNickname("빠른거북이").
-		SetFullname("임동영").
+		SetFullName("임동영").
 		SetOauthProvider("google").
 		Save(ctx)
 	if err != nil {
