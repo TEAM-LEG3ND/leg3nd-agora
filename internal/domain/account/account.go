@@ -1,6 +1,7 @@
 package account
 
 type Account struct {
+	Id            int64
 	Email         string
 	Nickname      string
 	FullName      string
