@@ -43,6 +43,12 @@ func (ac *AccountCreate) SetOauthProvider(ap account.OauthProvider) *AccountCrea
 	return ac
 }
 
+// SetID sets the "id" field.
+func (ac *AccountCreate) SetID(i int64) *AccountCreate {
+	ac.mutation.SetID(i)
+	return ac
+}
+
 // Mutation returns the AccountMutation object of the builder.
 func (ac *AccountCreate) Mutation() *AccountMutation {
 	return ac.mutation
@@ -108,8 +114,10 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
+	}
 	ac.mutation.id = &_node.ID
 	ac.mutation.done = true
 	return _node, nil
@@ -118,8 +126,12 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Account{config: ac.config}
-		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt64))
 	)
+	if id, ok := ac.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := ac.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
 		_node.Email = value
@@ -179,9 +191,9 @@ func (acb *AccountCreateBulk) Save(ctx context.Context) ([]*Account, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil
