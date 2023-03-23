@@ -19,8 +19,8 @@ type Account struct {
 	Email string `json:"email,omitempty"`
 	// Nickname holds the value of the "nickname" field.
 	Nickname string `json:"nickname,omitempty"`
-	// Fullname holds the value of the "fullname" field.
-	Fullname string `json:"fullname,omitempty"`
+	// FullName holds the value of the "full_name" field.
+	FullName string `json:"full_name,omitempty"`
 	// OauthProvider holds the value of the "oauth_provider" field.
 	OauthProvider account.OauthProvider `json:"oauth_provider,omitempty"`
 }
@@ -32,7 +32,7 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case account.FieldID:
 			values[i] = new(sql.NullInt64)
-		case account.FieldEmail, account.FieldNickname, account.FieldFullname, account.FieldOauthProvider:
+		case account.FieldEmail, account.FieldNickname, account.FieldFullName, account.FieldOauthProvider:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Account", columns[i])
@@ -67,11 +67,11 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.Nickname = value.String
 			}
-		case account.FieldFullname:
+		case account.FieldFullName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field fullname", values[i])
+				return fmt.Errorf("unexpected type %T for field full_name", values[i])
 			} else if value.Valid {
-				a.Fullname = value.String
+				a.FullName = value.String
 			}
 		case account.FieldOauthProvider:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -113,8 +113,8 @@ func (a *Account) String() string {
 	builder.WriteString("nickname=")
 	builder.WriteString(a.Nickname)
 	builder.WriteString(", ")
-	builder.WriteString("fullname=")
-	builder.WriteString(a.Fullname)
+	builder.WriteString("full_name=")
+	builder.WriteString(a.FullName)
 	builder.WriteString(", ")
 	builder.WriteString("oauth_provider=")
 	builder.WriteString(fmt.Sprintf("%v", a.OauthProvider))

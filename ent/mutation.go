@@ -34,7 +34,7 @@ type AccountMutation struct {
 	id             *int
 	email          *string
 	nickname       *string
-	fullname       *string
+	full_name      *string
 	oauth_provider *account.OauthProvider
 	clearedFields  map[string]struct{}
 	done           bool
@@ -212,40 +212,40 @@ func (m *AccountMutation) ResetNickname() {
 	m.nickname = nil
 }
 
-// SetFullname sets the "fullname" field.
-func (m *AccountMutation) SetFullname(s string) {
-	m.fullname = &s
+// SetFullName sets the "full_name" field.
+func (m *AccountMutation) SetFullName(s string) {
+	m.full_name = &s
 }
 
-// Fullname returns the value of the "fullname" field in the mutation.
-func (m *AccountMutation) Fullname() (r string, exists bool) {
-	v := m.fullname
+// FullName returns the value of the "full_name" field in the mutation.
+func (m *AccountMutation) FullName() (r string, exists bool) {
+	v := m.full_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFullname returns the old "fullname" field's value of the Account entity.
+// OldFullName returns the old "full_name" field's value of the Account entity.
 // If the Account object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccountMutation) OldFullname(ctx context.Context) (v string, err error) {
+func (m *AccountMutation) OldFullName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFullname is only allowed on UpdateOne operations")
+		return v, errors.New("OldFullName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFullname requires an ID field in the mutation")
+		return v, errors.New("OldFullName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFullname: %w", err)
+		return v, fmt.Errorf("querying old value for OldFullName: %w", err)
 	}
-	return oldValue.Fullname, nil
+	return oldValue.FullName, nil
 }
 
-// ResetFullname resets all changes to the "fullname" field.
-func (m *AccountMutation) ResetFullname() {
-	m.fullname = nil
+// ResetFullName resets all changes to the "full_name" field.
+func (m *AccountMutation) ResetFullName() {
+	m.full_name = nil
 }
 
 // SetOauthProvider sets the "oauth_provider" field.
@@ -325,8 +325,8 @@ func (m *AccountMutation) Fields() []string {
 	if m.nickname != nil {
 		fields = append(fields, account.FieldNickname)
 	}
-	if m.fullname != nil {
-		fields = append(fields, account.FieldFullname)
+	if m.full_name != nil {
+		fields = append(fields, account.FieldFullName)
 	}
 	if m.oauth_provider != nil {
 		fields = append(fields, account.FieldOauthProvider)
@@ -343,8 +343,8 @@ func (m *AccountMutation) Field(name string) (ent.Value, bool) {
 		return m.Email()
 	case account.FieldNickname:
 		return m.Nickname()
-	case account.FieldFullname:
-		return m.Fullname()
+	case account.FieldFullName:
+		return m.FullName()
 	case account.FieldOauthProvider:
 		return m.OauthProvider()
 	}
@@ -360,8 +360,8 @@ func (m *AccountMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldEmail(ctx)
 	case account.FieldNickname:
 		return m.OldNickname(ctx)
-	case account.FieldFullname:
-		return m.OldFullname(ctx)
+	case account.FieldFullName:
+		return m.OldFullName(ctx)
 	case account.FieldOauthProvider:
 		return m.OldOauthProvider(ctx)
 	}
@@ -387,12 +387,12 @@ func (m *AccountMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNickname(v)
 		return nil
-	case account.FieldFullname:
+	case account.FieldFullName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFullname(v)
+		m.SetFullName(v)
 		return nil
 	case account.FieldOauthProvider:
 		v, ok := value.(account.OauthProvider)
@@ -456,8 +456,8 @@ func (m *AccountMutation) ResetField(name string) error {
 	case account.FieldNickname:
 		m.ResetNickname()
 		return nil
-	case account.FieldFullname:
-		m.ResetFullname()
+	case account.FieldFullName:
+		m.ResetFullName()
 		return nil
 	case account.FieldOauthProvider:
 		m.ResetOauthProvider()

@@ -15,8 +15,8 @@ const (
 	FieldEmail = "email"
 	// FieldNickname holds the string denoting the nickname field in the database.
 	FieldNickname = "nickname"
-	// FieldFullname holds the string denoting the fullname field in the database.
-	FieldFullname = "fullname"
+	// FieldFullName holds the string denoting the full_name field in the database.
+	FieldFullName = "full_name"
 	// FieldOauthProvider holds the string denoting the oauth_provider field in the database.
 	FieldOauthProvider = "oauth_provider"
 	// Table holds the table name of the account in the database.
@@ -28,7 +28,7 @@ var Columns = []string{
 	FieldID,
 	FieldEmail,
 	FieldNickname,
-	FieldFullname,
+	FieldFullName,
 	FieldOauthProvider,
 }
 

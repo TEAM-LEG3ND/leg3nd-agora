@@ -31,9 +31,9 @@ func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
 	return ac
 }
 
-// SetFullname sets the "fullname" field.
-func (ac *AccountCreate) SetFullname(s string) *AccountCreate {
-	ac.mutation.SetFullname(s)
+// SetFullName sets the "full_name" field.
+func (ac *AccountCreate) SetFullName(s string) *AccountCreate {
+	ac.mutation.SetFullName(s)
 	return ac
 }
 
@@ -83,8 +83,8 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Nickname(); !ok {
 		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
 	}
-	if _, ok := ac.mutation.Fullname(); !ok {
-		return &ValidationError{Name: "fullname", err: errors.New(`ent: missing required field "Account.fullname"`)}
+	if _, ok := ac.mutation.FullName(); !ok {
+		return &ValidationError{Name: "full_name", err: errors.New(`ent: missing required field "Account.full_name"`)}
 	}
 	if _, ok := ac.mutation.OauthProvider(); !ok {
 		return &ValidationError{Name: "oauth_provider", err: errors.New(`ent: missing required field "Account.oauth_provider"`)}
@@ -128,9 +128,9 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 		_node.Nickname = value
 	}
-	if value, ok := ac.mutation.Fullname(); ok {
-		_spec.SetField(account.FieldFullname, field.TypeString, value)
-		_node.Fullname = value
+	if value, ok := ac.mutation.FullName(); ok {
+		_spec.SetField(account.FieldFullName, field.TypeString, value)
+		_node.FullName = value
 	}
 	if value, ok := ac.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)

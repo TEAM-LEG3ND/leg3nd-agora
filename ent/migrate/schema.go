@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "email", Type: field.TypeString},
 		{Name: "nickname", Type: field.TypeString},
-		{Name: "fullname", Type: field.TypeString},
+		{Name: "full_name", Type: field.TypeString},
 		{Name: "oauth_provider", Type: field.TypeEnum, Enums: []string{"google"}},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.

@@ -63,9 +63,9 @@ func Nickname(v string) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldNickname, v))
 }
 
-// Fullname applies equality check predicate on the "fullname" field. It's identical to FullnameEQ.
-func Fullname(v string) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldFullname, v))
+// FullName applies equality check predicate on the "full_name" field. It's identical to FullNameEQ.
+func FullName(v string) predicate.Account {
+	return predicate.Account(sql.FieldEQ(FieldFullName, v))
 }
 
 // EmailEQ applies the EQ predicate on the "email" field.
@@ -198,69 +198,69 @@ func NicknameContainsFold(v string) predicate.Account {
 	return predicate.Account(sql.FieldContainsFold(FieldNickname, v))
 }
 
-// FullnameEQ applies the EQ predicate on the "fullname" field.
-func FullnameEQ(v string) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldFullname, v))
+// FullNameEQ applies the EQ predicate on the "full_name" field.
+func FullNameEQ(v string) predicate.Account {
+	return predicate.Account(sql.FieldEQ(FieldFullName, v))
 }
 
-// FullnameNEQ applies the NEQ predicate on the "fullname" field.
-func FullnameNEQ(v string) predicate.Account {
-	return predicate.Account(sql.FieldNEQ(FieldFullname, v))
+// FullNameNEQ applies the NEQ predicate on the "full_name" field.
+func FullNameNEQ(v string) predicate.Account {
+	return predicate.Account(sql.FieldNEQ(FieldFullName, v))
 }
 
-// FullnameIn applies the In predicate on the "fullname" field.
-func FullnameIn(vs ...string) predicate.Account {
-	return predicate.Account(sql.FieldIn(FieldFullname, vs...))
+// FullNameIn applies the In predicate on the "full_name" field.
+func FullNameIn(vs ...string) predicate.Account {
+	return predicate.Account(sql.FieldIn(FieldFullName, vs...))
 }
 
-// FullnameNotIn applies the NotIn predicate on the "fullname" field.
-func FullnameNotIn(vs ...string) predicate.Account {
-	return predicate.Account(sql.FieldNotIn(FieldFullname, vs...))
+// FullNameNotIn applies the NotIn predicate on the "full_name" field.
+func FullNameNotIn(vs ...string) predicate.Account {
+	return predicate.Account(sql.FieldNotIn(FieldFullName, vs...))
 }
 
-// FullnameGT applies the GT predicate on the "fullname" field.
-func FullnameGT(v string) predicate.Account {
-	return predicate.Account(sql.FieldGT(FieldFullname, v))
+// FullNameGT applies the GT predicate on the "full_name" field.
+func FullNameGT(v string) predicate.Account {
+	return predicate.Account(sql.FieldGT(FieldFullName, v))
 }
 
-// FullnameGTE applies the GTE predicate on the "fullname" field.
-func FullnameGTE(v string) predicate.Account {
-	return predicate.Account(sql.FieldGTE(FieldFullname, v))
+// FullNameGTE applies the GTE predicate on the "full_name" field.
+func FullNameGTE(v string) predicate.Account {
+	return predicate.Account(sql.FieldGTE(FieldFullName, v))
 }
 
-// FullnameLT applies the LT predicate on the "fullname" field.
-func FullnameLT(v string) predicate.Account {
-	return predicate.Account(sql.FieldLT(FieldFullname, v))
+// FullNameLT applies the LT predicate on the "full_name" field.
+func FullNameLT(v string) predicate.Account {
+	return predicate.Account(sql.FieldLT(FieldFullName, v))
 }
 
-// FullnameLTE applies the LTE predicate on the "fullname" field.
-func FullnameLTE(v string) predicate.Account {
-	return predicate.Account(sql.FieldLTE(FieldFullname, v))
+// FullNameLTE applies the LTE predicate on the "full_name" field.
+func FullNameLTE(v string) predicate.Account {
+	return predicate.Account(sql.FieldLTE(FieldFullName, v))
 }
 
-// FullnameContains applies the Contains predicate on the "fullname" field.
-func FullnameContains(v string) predicate.Account {
-	return predicate.Account(sql.FieldContains(FieldFullname, v))
+// FullNameContains applies the Contains predicate on the "full_name" field.
+func FullNameContains(v string) predicate.Account {
+	return predicate.Account(sql.FieldContains(FieldFullName, v))
 }
 
-// FullnameHasPrefix applies the HasPrefix predicate on the "fullname" field.
-func FullnameHasPrefix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasPrefix(FieldFullname, v))
+// FullNameHasPrefix applies the HasPrefix predicate on the "full_name" field.
+func FullNameHasPrefix(v string) predicate.Account {
+	return predicate.Account(sql.FieldHasPrefix(FieldFullName, v))
 }
 
-// FullnameHasSuffix applies the HasSuffix predicate on the "fullname" field.
-func FullnameHasSuffix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasSuffix(FieldFullname, v))
+// FullNameHasSuffix applies the HasSuffix predicate on the "full_name" field.
+func FullNameHasSuffix(v string) predicate.Account {
+	return predicate.Account(sql.FieldHasSuffix(FieldFullName, v))
 }
 
-// FullnameEqualFold applies the EqualFold predicate on the "fullname" field.
-func FullnameEqualFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldEqualFold(FieldFullname, v))
+// FullNameEqualFold applies the EqualFold predicate on the "full_name" field.
+func FullNameEqualFold(v string) predicate.Account {
+	return predicate.Account(sql.FieldEqualFold(FieldFullName, v))
 }
 
-// FullnameContainsFold applies the ContainsFold predicate on the "fullname" field.
-func FullnameContainsFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldContainsFold(FieldFullname, v))
+// FullNameContainsFold applies the ContainsFold predicate on the "full_name" field.
+func FullNameContainsFold(v string) predicate.Account {
+	return predicate.Account(sql.FieldContainsFold(FieldFullName, v))
 }
 
 // OauthProviderEQ applies the EQ predicate on the "oauth_provider" field.
