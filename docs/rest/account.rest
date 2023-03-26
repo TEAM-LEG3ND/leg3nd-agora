@@ -1,0 +1,13 @@
+GET http://localhost:8080/v1/3
+
+###
+
+POST http://localhost:8080/v1
+Content-Type: application/json
+
+{
+  "email": "safasmp31le@gmail.com",
+  "nickname": "ㅋㅋagddd",
+  "full_name": "dddf333",
+  "o_auth_provider": "google"
+}
