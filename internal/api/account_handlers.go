@@ -1,0 +1,56 @@
+package api
+
+import (
+	"github.com/gofiber/fiber/v2"
+	request "leg3nd-agora/internal/api/dto/request"
+	response "leg3nd-agora/internal/api/dto/response"
+	"leg3nd-agora/internal/core/ports"
+)
+
+type AccountHandlers struct {
+	service ports.AccountService
+}
+
+func ProvideAccountHandlers(service ports.AccountService) *AccountHandlers {
+	return &AccountHandlers{service: service}
+}
+
+func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
+	var newAccountRequest *request.NewAccountRequest
+
+	if err := c.BodyParser(&newAccountRequest); err != nil {
+		return c.SendStatus(400)
+	}
+
+	newAccount, err := co.service.CreateAccount(c.Context(),
+		newAccountRequest.Email,
+		newAccountRequest.Nickname,
+		newAccountRequest.FullName,
+		newAccountRequest.OAuthProvider,
+	)
+	if err != nil {
+		return c.SendStatus(500)
+	}
+
+	newAccountResponse := &response.NewAccountResponse{Id: newAccount.Id}
+
+	return c.JSON(newAccountResponse)
+}
+
+func (co *AccountHandlers) FindAccountById(c *fiber.Ctx) error {
+	var accountByIdRequest request.AccountByIdRequest
+
+	err := c.ParamsParser(&accountByIdRequest)
+	if err != nil {
+		return err
+	}
+
+	account, err := co.service.FindAccountById(c.Context(), accountByIdRequest.Id)
+	if err != nil {
+		return err
+	}
+
+	accountResponse := response.AccountResponse{}.OfDomain(account)
+
+	return c.JSON(accountResponse)
+}

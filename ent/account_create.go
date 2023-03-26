@@ -31,15 +31,21 @@ func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
 	return ac
 }
 
-// SetFullname sets the "fullname" field.
-func (ac *AccountCreate) SetFullname(s string) *AccountCreate {
-	ac.mutation.SetFullname(s)
+// SetFullName sets the "full_name" field.
+func (ac *AccountCreate) SetFullName(s string) *AccountCreate {
+	ac.mutation.SetFullName(s)
 	return ac
 }
 
 // SetOauthProvider sets the "oauth_provider" field.
 func (ac *AccountCreate) SetOauthProvider(ap account.OauthProvider) *AccountCreate {
 	ac.mutation.SetOauthProvider(ap)
+	return ac
+}
+
+// SetID sets the "id" field.
+func (ac *AccountCreate) SetID(i int64) *AccountCreate {
+	ac.mutation.SetID(i)
 	return ac
 }
 
@@ -83,8 +89,8 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Nickname(); !ok {
 		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
 	}
-	if _, ok := ac.mutation.Fullname(); !ok {
-		return &ValidationError{Name: "fullname", err: errors.New(`ent: missing required field "Account.fullname"`)}
+	if _, ok := ac.mutation.FullName(); !ok {
+		return &ValidationError{Name: "full_name", err: errors.New(`ent: missing required field "Account.full_name"`)}
 	}
 	if _, ok := ac.mutation.OauthProvider(); !ok {
 		return &ValidationError{Name: "oauth_provider", err: errors.New(`ent: missing required field "Account.oauth_provider"`)}
@@ -108,8 +114,10 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
+	}
 	ac.mutation.id = &_node.ID
 	ac.mutation.done = true
 	return _node, nil
@@ -118,8 +126,12 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Account{config: ac.config}
-		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt64))
 	)
+	if id, ok := ac.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := ac.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
 		_node.Email = value
@@ -128,9 +140,9 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 		_node.Nickname = value
 	}
-	if value, ok := ac.mutation.Fullname(); ok {
-		_spec.SetField(account.FieldFullname, field.TypeString, value)
-		_node.Fullname = value
+	if value, ok := ac.mutation.FullName(); ok {
+		_spec.SetField(account.FieldFullName, field.TypeString, value)
+		_node.FullName = value
 	}
 	if value, ok := ac.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
@@ -179,9 +191,9 @@ func (acb *AccountCreateBulk) Save(ctx context.Context) ([]*Account, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

@@ -39,9 +39,9 @@ func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
 	return au
 }
 
-// SetFullname sets the "fullname" field.
-func (au *AccountUpdate) SetFullname(s string) *AccountUpdate {
-	au.mutation.SetFullname(s)
+// SetFullName sets the "full_name" field.
+func (au *AccountUpdate) SetFullName(s string) *AccountUpdate {
+	au.mutation.SetFullName(s)
 	return au
 }
 
@@ -97,7 +97,7 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := au.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(account.Table, account.Columns, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(account.Table, account.Columns, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt64))
 	if ps := au.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -111,8 +111,8 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Fullname(); ok {
-		_spec.SetField(account.FieldFullname, field.TypeString, value)
+	if value, ok := au.mutation.FullName(); ok {
+		_spec.SetField(account.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := au.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
@@ -149,9 +149,9 @@ func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
 	return auo
 }
 
-// SetFullname sets the "fullname" field.
-func (auo *AccountUpdateOne) SetFullname(s string) *AccountUpdateOne {
-	auo.mutation.SetFullname(s)
+// SetFullName sets the "full_name" field.
+func (auo *AccountUpdateOne) SetFullName(s string) *AccountUpdateOne {
+	auo.mutation.SetFullName(s)
 	return auo
 }
 
@@ -220,7 +220,7 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	if err := auo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(account.Table, account.Columns, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(account.Table, account.Columns, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt64))
 	id, ok := auo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Account.id" for update`)}
@@ -251,8 +251,8 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	if value, ok := auo.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Fullname(); ok {
-		_spec.SetField(account.FieldFullname, field.TypeString, value)
+	if value, ok := auo.mutation.FullName(); ok {
+		_spec.SetField(account.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
