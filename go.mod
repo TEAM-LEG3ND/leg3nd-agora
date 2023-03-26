@@ -6,6 +6,8 @@ require (
 	entgo.io/ent v0.11.10
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gofiber/fiber/v2 v2.43.0
+	github.com/google/wire v0.5.0
+	github.com/joho/godotenv v1.5.1
 )
 
 require (
@@ -16,7 +18,6 @@ require (
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/google/wire v0.5.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
