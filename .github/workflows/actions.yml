@@ -39,7 +39,7 @@ jobs:
           context: .
           push: true
           platforms: linux/arm64
-          tags: ${{ secrets.REGISTRY_HOST }}/leg3nd-pillar:latest
+          tags: ${{ secrets.REGISTRY_HOST }}/leg3nd-agora:latest
   docker-pull-and-restart:
     environment: dev
     runs-on: ubuntu-latest
