@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"fmt"
 	"leg3nd-agora/ent"
 	"leg3nd-agora/internal/util"
@@ -45,10 +44,10 @@ func ProvideClient() (*ent.Client, func(), error) {
 	log.Println("mysql connection to " + dataSourceUrl + " success")
 
 	// Run the auto migration tool.
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v, cleint: %s", err, client.Schema)
-		return nil, nil, err
-	}
+	//if err := client.Schema.Create(context.Background()); err != nil {
+	//	log.Fatalf("failed creating schema resources: %v, cleint: %s", err, client.Schema)
+	//	return nil, nil, err
+	//}
 
 	cleanup := func() {
 		if err := client.Close(); err != nil {
