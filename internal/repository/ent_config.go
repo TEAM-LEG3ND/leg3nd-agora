@@ -42,6 +42,7 @@ func ProvideClient() (*ent.Client, func(), error) {
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}
+	log.Println("mysql connection to " + dataSourceUrl + " success")
 
 	// Run the auto migration tool.
 	if err := client.Schema.Create(context.Background()); err != nil {
