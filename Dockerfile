@@ -20,12 +20,12 @@ RUN go build -o main ./cmd
 WORKDIR /dist
 
 RUN cp /build/main .
-#RUN cp /build/.env .
+RUN cp /build/.env .
 
 FROM scratch
 
 COPY --from=builder /dist/main .
-#COPY --from=builder /dist/.env .
+COPY --from=builder /dist/.env .
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 
