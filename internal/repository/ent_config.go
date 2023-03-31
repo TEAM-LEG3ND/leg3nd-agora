@@ -45,7 +45,7 @@ func ProvideClient() (*ent.Client, func(), error) {
 
 	// Run the auto migration tool.
 	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
+		log.Fatalf("failed creating schema resources: %v, cleint: %s", err, client.Schema)
 		return nil, nil, err
 	}
 
