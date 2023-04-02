@@ -13,7 +13,9 @@ var AppSet = wire.NewSet(ProvideApp, api.Set, service.Set, repository.Set)
 
 func ProvideApp(accountHandler *api.AccountHandlers) *fiber.App {
 	app := fiber.New()
-
+	app.Get("/ping", func(ctx *fiber.Ctx) error {
+		return ctx.SendString("pong")
+	})
 	v1 := app.Group("/v1")
 
 	v1.Post("", accountHandler.CreateAccount)
