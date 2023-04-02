@@ -18,6 +18,7 @@ func ProvideApp(accountHandler *api.AccountHandlers) *fiber.App {
 
 	v1.Post("", accountHandler.CreateAccount)
 	v1.Get("/:id", accountHandler.FindAccountById)
+	v1.Get("/email/:email", accountHandler.FindAccountByEmail)
 
 	log.Println("Application is starting...")
 	return app
