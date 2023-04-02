@@ -54,3 +54,21 @@ func (co *AccountHandlers) FindAccountById(c *fiber.Ctx) error {
 
 	return c.JSON(accountResponse)
 }
+
+func (co *AccountHandlers) FindAccountByEmail(c *fiber.Ctx) error {
+	var accountByEmailRequest *request.AccountByEmailRequest
+
+	err := c.ParamsParser(&accountByEmailRequest)
+	if err != nil {
+		return err
+	}
+
+	account, err := co.service.FindAccountByEmail(c.Context(), accountByEmailRequest.Email)
+	if err != nil {
+		return err
+	}
+
+	accountResponse := response.AccountResponse{}.OfDomain(account)
+
+	return c.JSON(accountResponse)
+}
