@@ -56,7 +56,7 @@ func (co *AccountHandlers) FindAccountById(c *fiber.Ctx) error {
 }
 
 func (co *AccountHandlers) FindAccountByEmail(c *fiber.Ctx) error {
-	var accountByEmailRequest *request.AccountByEmailRequest
+	var accountByEmailRequest request.AccountByEmailRequest
 
 	err := c.ParamsParser(&accountByEmailRequest)
 	if err != nil {
