@@ -1,6 +1,6 @@
 GET http://localhost:8080/v1/3
 
-###
+### Create Account with Nickname
 
 POST http://localhost:8080/v1
 Content-Type: application/json
@@ -8,6 +8,17 @@ Content-Type: application/json
 {
   "email": "safasmp31le@gmail.com",
   "nickname": "ㅋㅋagddd",
+  "full_name": "dddf333",
+  "o_auth_provider": "google"
+}
+
+### Create Account without Nickname, Random Nickname is assigned
+
+POST http://localhost:8080/v1
+Content-Type: application/json
+
+{
+  "email": "safasmp31le@gmail.com",
   "full_name": "dddf333",
   "o_auth_provider": "google"
 }
