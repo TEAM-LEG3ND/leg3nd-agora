@@ -54,3 +54,20 @@ func (r *AccountRepository) FindById(ctx context.Context, accountId int64) (*dom
 
 	return &domainAccount, nil
 }
+
+func (r *AccountRepository) FindByEmail(ctx context.Context, email string) (*domain.Account, error) {
+	ac, err := r.client.Account.Query().Where(account.Email(email)).Only(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find account by email : %w", err)
+	}
+
+	domainAccount := domain.Account{
+		Id:            ac.ID,
+		Email:         ac.Email,
+		Nickname:      ac.Nickname,
+		FullName:      ac.FullName,
+		OAuthProvider: domain.OAuthProvider(ac.OauthProvider),
+	}
+
+	return &domainAccount, nil
+}
