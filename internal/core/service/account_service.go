@@ -46,6 +46,16 @@ func (s *AccountService) FindAccountById(ctx context.Context, id int64) (*domain
 	}
 }
 
+func (s *AccountService) FindAccountByEmail(ctx context.Context, email string) (*domain.Account, error) {
+	if acc, err := s.repository.FindByEmail(ctx, email); err != nil {
+		return nil, fmt.Errorf("error finding account by email: %v", err)
+	} else if acc == nil {
+		return nil, fmt.Errorf("entity not found by email: %s", email)
+	} else {
+		return acc, nil
+	}
+}
+
 func getRandomNickname() string {
 	colors := []string{"빨강", "주황", "노랑", "초록", "파랑", "보라", "누런", "갈색", "남색", "하늘", "하양", "검정", "까망", "누런"}
 	foods := []string{"마라샹궈", "알리오올리오", "김피탕", "짜장면", "짬뽕", "탕수육", "떡볶이", "양꼬치"}

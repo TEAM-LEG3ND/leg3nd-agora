@@ -22,3 +22,7 @@ Content-Type: application/json
   "full_name": "dddf333",
   "o_auth_provider": "google"
 }
+
+### Find Account By Email
+
+GET http://localhost:8080/v1/email/safasmp31le@gmail.com
