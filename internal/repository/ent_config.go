@@ -6,6 +6,8 @@ import (
 	"leg3nd-agora/ent"
 	"leg3nd-agora/internal/util"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func ProvideClient() (*ent.Client, func(), error) {
