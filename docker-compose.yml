@@ -4,7 +4,7 @@ networks:
   subnet:
     driver: bridge
 
-services: # 컨테이너 설정
+services:
   leg3nd-agora:
     container_name: leg3nd-agora
     build:
@@ -20,10 +20,10 @@ services: # 컨테이너 설정
     command: mysqld --authentication_policy=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./volume/mysql:/var/lib/mysql
-    environment: # 컨테이너 안의 환경변수 설정
+    environment:
       - MYSQL_ROOT_PASSWORD=test123
       - MYSQL_DATABASE=agora
-    ports: # -p 옵션과 동일
+    ports:
       - "3306:3306"
     networks:
       - subnet
