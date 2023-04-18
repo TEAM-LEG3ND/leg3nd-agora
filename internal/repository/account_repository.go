@@ -71,3 +71,11 @@ func (r *AccountRepository) FindByEmail(ctx context.Context, email string) (*dom
 
 	return &domainAccount, nil
 }
+
+func (r *AccountRepository) ExistByNickname(ctx context.Context, nickname string) (bool, error) {
+	exist, err := r.client.Account.Query().Where(account.Nickname(nickname)).Exist(ctx)
+	if err != nil {
+		return false, fmt.Errorf("failed to check exist account by nickname : %w", err)
+	}
+	return exist, nil
+}
