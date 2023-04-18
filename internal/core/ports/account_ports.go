@@ -15,4 +15,5 @@ type AccountRepository interface {
 	Save(ctx context.Context, ac *domain.Account) (*domain.Account, error)
 	FindById(ctx context.Context, accountId int64) (*domain.Account, error)
 	FindByEmail(ctx context.Context, email string) (*domain.Account, error)
+	ExistByNickname(ctx context.Context, nickname string) (bool, error)
 }
