@@ -3,11 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"leg3nd-agora/internal/core/domain"
 	"leg3nd-agora/internal/core/ports"
 	"log"
-	"math/rand"
 )
 
 type AccountService struct {
@@ -22,8 +20,15 @@ func ProvideAccountService(repository ports.AccountRepository) *AccountService {
 }
 
 func (s *AccountService) CreateAccount(ctx context.Context, email string, nickname string, fullName string, oAuthProvider domain.OAuthProvider) (*domain.Account, error) {
+	// TODO: add proper validation
 	if nickname == "" {
-		nickname = getRandomNickname()
+		return nil, fmt.Errorf("nickname is not provided")
+	} else {
+		if exist, err := s.checkNicknameExists(ctx, nickname); err != nil {
+			return nil, fmt.Errorf("nickname duplication check failed, nickname: %s", nickname)
+		} else if exist {
+			return nil, fmt.Errorf("nickname %s already exists", nickname)
+		}
 	}
 	log.Println(nickname)
 	newAccount := domain.NewAccount(email, nickname, fullName, oAuthProvider)
@@ -56,12 +61,11 @@ func (s *AccountService) FindAccountByEmail(ctx context.Context, email string) (
 	}
 }
 
-func getRandomNickname() string {
-	colors := []string{"빨강", "주황", "노랑", "초록", "파랑", "보라", "누런", "갈색", "남색", "하늘", "하양", "검정", "까망", "누런"}
-	foods := []string{"마라샹궈", "알리오올리오", "김피탕", "짜장면", "짬뽕", "탕수육", "떡볶이", "양꼬치"}
-	uuidStr := uuid.New().String()
-
-	nickname := fmt.Sprintf("%s%s-%s", colors[rand.Intn(len(colors))], foods[rand.Intn(len(foods))], uuidStr)
-
-	return nickname
+func (s *AccountService) checkNicknameExists(ctx context.Context, nickname string) (bool, error) {
+	exist, err := s.repository.ExistByNickname(ctx, nickname)
+	if err != nil {
+		log.Println(err)
+		return true, err
+	}
+	return exist, nil
 }
