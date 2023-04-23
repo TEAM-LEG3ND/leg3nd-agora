@@ -37,20 +37,24 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 }
 
 func (co *AccountHandlers) UpdateAccount(c *fiber.Ctx) error {
-	var updateAccountRequest *request.UpdateAccountRequest
+	var updateAccountRequestParam *request.UpdateAccountRequestParam
+	var updateAccountRequestBody *request.UpdateAccountRequestBody
 
-	if err := c.BodyParser(&updateAccountRequest); err != nil {
+	if err := c.ParamsParser(&updateAccountRequestParam); err != nil {
+		return c.SendStatus(400)
+	}
+	if err := c.BodyParser(&updateAccountRequestBody); err != nil {
 		return c.SendStatus(400)
 	}
 
 	updatedAccount, err := co.service.UpdateAccount(
 		c.Context(),
-		updateAccountRequest.Id,
-		updateAccountRequest.Email,
-		updateAccountRequest.FullName,
-		updateAccountRequest.Nickname,
-		updateAccountRequest.OAuthProvider,
-		updateAccountRequest.Status,
+		updateAccountRequestParam.Id,
+		updateAccountRequestBody.Email,
+		updateAccountRequestBody.FullName,
+		updateAccountRequestBody.Nickname,
+		updateAccountRequestBody.OAuthProvider,
+		updateAccountRequestBody.Status,
 	)
 	if err != nil {
 		return c.SendStatus(500)
