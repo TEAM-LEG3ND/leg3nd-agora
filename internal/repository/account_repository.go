@@ -55,16 +55,15 @@ func (r *AccountRepository) Update(ctx context.Context, ac *domain.Account) (*do
 		return nil, err
 	}
 
-	accountEntity := &ent.Account{
-		ID:            ac.Id,
-		Email:         ac.Email,
-		Nickname:      ac.Nickname,
-		FullName:      ac.FullName,
-		OauthProvider: oAuthProvider,
-		Status:        status,
-	}
+	updatedAccount, err := r.client.Account.
+		UpdateOneID(ac.Id).
+		SetEmail(ac.Email).
+		SetFullName(ac.FullName).
+		SetNillableNickname(ac.Nickname).
+		SetOauthProvider(oAuthProvider).
+		SetStatus(status).
+		Save(ctx)
 
-	updatedAccount, err := r.client.Account.UpdateOne(accountEntity).Save(ctx)
 	if err != nil {
 		log.Printf("error occurred while updating account, %v", err)
 	}
