@@ -37,14 +37,14 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 }
 
 func (co *AccountHandlers) UpdateAccount(c *fiber.Ctx) error {
-	var updateAccountRequestParam *request.UpdateAccountRequestParam
+	var updateAccountRequestParam request.UpdateAccountRequestParam
 	var updateAccountRequestBody *request.UpdateAccountRequestBody
 
 	if err := c.ParamsParser(&updateAccountRequestParam); err != nil {
-		return c.SendStatus(400)
+		return c.Status(400).JSON(fiber.Map{"message": "Invalid id param"})
 	}
 	if err := c.BodyParser(&updateAccountRequestBody); err != nil {
-		return c.SendStatus(400)
+		return c.Status(400).JSON(fiber.Map{"message": "Invalid update account body"})
 	}
 
 	updatedAccount, err := co.service.UpdateAccount(
