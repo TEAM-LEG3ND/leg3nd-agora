@@ -15,7 +15,7 @@ func (Account) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
 		field.String("email"),
-		field.String("nickname"),
+		field.String("nickname").Optional().Nillable(),
 		field.String("full_name"),
 		field.Enum("oauth_provider").
 			Values("google"),

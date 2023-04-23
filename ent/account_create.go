@@ -31,6 +31,14 @@ func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
 	return ac
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableNickname(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetNickname(*s)
+	}
+	return ac
+}
+
 // SetFullName sets the "full_name" field.
 func (ac *AccountCreate) SetFullName(s string) *AccountCreate {
 	ac.mutation.SetFullName(s)
@@ -92,9 +100,6 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "Account.email"`)}
 	}
-	if _, ok := ac.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
-	}
 	if _, ok := ac.mutation.FullName(); !ok {
 		return &ValidationError{Name: "full_name", err: errors.New(`ent: missing required field "Account.full_name"`)}
 	}
@@ -152,7 +157,7 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := ac.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
+		_node.Nickname = &value
 	}
 	if value, ok := ac.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)

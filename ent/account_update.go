@@ -39,6 +39,20 @@ func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
 	return au
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableNickname(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetNickname(*s)
+	}
+	return au
+}
+
+// ClearNickname clears the value of the "nickname" field.
+func (au *AccountUpdate) ClearNickname() *AccountUpdate {
+	au.mutation.ClearNickname()
+	return au
+}
+
 // SetFullName sets the "full_name" field.
 func (au *AccountUpdate) SetFullName(s string) *AccountUpdate {
 	au.mutation.SetFullName(s)
@@ -122,6 +136,9 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
+	if au.mutation.NicknameCleared() {
+		_spec.ClearField(account.FieldNickname, field.TypeString)
+	}
 	if value, ok := au.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)
 	}
@@ -160,6 +177,20 @@ func (auo *AccountUpdateOne) SetEmail(s string) *AccountUpdateOne {
 // SetNickname sets the "nickname" field.
 func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
 	auo.mutation.SetNickname(s)
+	return auo
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableNickname(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetNickname(*s)
+	}
+	return auo
+}
+
+// ClearNickname clears the value of the "nickname" field.
+func (auo *AccountUpdateOne) ClearNickname() *AccountUpdateOne {
+	auo.mutation.ClearNickname()
 	return auo
 }
 
@@ -275,6 +306,9 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	}
 	if value, ok := auo.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
+	}
+	if auo.mutation.NicknameCleared() {
+		_spec.ClearField(account.FieldNickname, field.TypeString)
 	}
 	if value, ok := auo.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)

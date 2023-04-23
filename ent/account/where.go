@@ -188,6 +188,16 @@ func NicknameHasSuffix(v string) predicate.Account {
 	return predicate.Account(sql.FieldHasSuffix(FieldNickname, v))
 }
 
+// NicknameIsNil applies the IsNil predicate on the "nickname" field.
+func NicknameIsNil() predicate.Account {
+	return predicate.Account(sql.FieldIsNull(FieldNickname))
+}
+
+// NicknameNotNil applies the NotNil predicate on the "nickname" field.
+func NicknameNotNil() predicate.Account {
+	return predicate.Account(sql.FieldNotNull(FieldNickname))
+}
+
 // NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
 func NicknameEqualFold(v string) predicate.Account {
 	return predicate.Account(sql.FieldEqualFold(FieldNickname, v))

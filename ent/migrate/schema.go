@@ -12,7 +12,7 @@ var (
 	AccountsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "email", Type: field.TypeString},
-		{Name: "nickname", Type: field.TypeString},
+		{Name: "nickname", Type: field.TypeString, Nullable: true},
 		{Name: "full_name", Type: field.TypeString},
 		{Name: "oauth_provider", Type: field.TypeEnum, Enums: []string{"google"}},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"draft", "ok", "suspended", "withdraw"}},

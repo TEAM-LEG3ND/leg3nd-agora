@@ -200,7 +200,7 @@ func (m *AccountMutation) Nickname() (r string, exists bool) {
 // OldNickname returns the old "nickname" field's value of the Account entity.
 // If the Account object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccountMutation) OldNickname(ctx context.Context) (v string, err error) {
+func (m *AccountMutation) OldNickname(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldNickname is only allowed on UpdateOne operations")
 	}
@@ -214,9 +214,22 @@ func (m *AccountMutation) OldNickname(ctx context.Context) (v string, err error)
 	return oldValue.Nickname, nil
 }
 
+// ClearNickname clears the value of the "nickname" field.
+func (m *AccountMutation) ClearNickname() {
+	m.nickname = nil
+	m.clearedFields[account.FieldNickname] = struct{}{}
+}
+
+// NicknameCleared returns if the "nickname" field was cleared in this mutation.
+func (m *AccountMutation) NicknameCleared() bool {
+	_, ok := m.clearedFields[account.FieldNickname]
+	return ok
+}
+
 // ResetNickname resets all changes to the "nickname" field.
 func (m *AccountMutation) ResetNickname() {
 	m.nickname = nil
+	delete(m.clearedFields, account.FieldNickname)
 }
 
 // SetFullName sets the "full_name" field.
@@ -487,7 +500,11 @@ func (m *AccountMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AccountMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(account.FieldNickname) {
+		fields = append(fields, account.FieldNickname)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -500,6 +517,11 @@ func (m *AccountMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AccountMutation) ClearField(name string) error {
+	switch name {
+	case account.FieldNickname:
+		m.ClearNickname()
+		return nil
+	}
 	return fmt.Errorf("unknown Account nullable field %s", name)
 }
 

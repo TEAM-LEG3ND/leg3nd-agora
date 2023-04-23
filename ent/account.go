@@ -18,7 +18,7 @@ type Account struct {
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
 	// Nickname holds the value of the "nickname" field.
-	Nickname string `json:"nickname,omitempty"`
+	Nickname *string `json:"nickname,omitempty"`
 	// FullName holds the value of the "full_name" field.
 	FullName string `json:"full_name,omitempty"`
 	// OauthProvider holds the value of the "oauth_provider" field.
@@ -67,7 +67,8 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				a.Nickname = value.String
+				a.Nickname = new(string)
+				*a.Nickname = value.String
 			}
 		case account.FieldFullName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -118,8 +119,10 @@ func (a *Account) String() string {
 	builder.WriteString("email=")
 	builder.WriteString(a.Email)
 	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(a.Nickname)
+	if v := a.Nickname; v != nil {
+		builder.WriteString("nickname=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("full_name=")
 	builder.WriteString(a.FullName)
