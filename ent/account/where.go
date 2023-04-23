@@ -188,6 +188,16 @@ func NicknameHasSuffix(v string) predicate.Account {
 	return predicate.Account(sql.FieldHasSuffix(FieldNickname, v))
 }
 
+// NicknameIsNil applies the IsNil predicate on the "nickname" field.
+func NicknameIsNil() predicate.Account {
+	return predicate.Account(sql.FieldIsNull(FieldNickname))
+}
+
+// NicknameNotNil applies the NotNil predicate on the "nickname" field.
+func NicknameNotNil() predicate.Account {
+	return predicate.Account(sql.FieldNotNull(FieldNickname))
+}
+
 // NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
 func NicknameEqualFold(v string) predicate.Account {
 	return predicate.Account(sql.FieldEqualFold(FieldNickname, v))
@@ -281,6 +291,26 @@ func OauthProviderIn(vs ...OauthProvider) predicate.Account {
 // OauthProviderNotIn applies the NotIn predicate on the "oauth_provider" field.
 func OauthProviderNotIn(vs ...OauthProvider) predicate.Account {
 	return predicate.Account(sql.FieldNotIn(FieldOauthProvider, vs...))
+}
+
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v Status) predicate.Account {
+	return predicate.Account(sql.FieldEQ(FieldStatus, v))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v Status) predicate.Account {
+	return predicate.Account(sql.FieldNEQ(FieldStatus, v))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...Status) predicate.Account {
+	return predicate.Account(sql.FieldIn(FieldStatus, vs...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...Status) predicate.Account {
+	return predicate.Account(sql.FieldNotIn(FieldStatus, vs...))
 }
 
 // And groups predicates with the AND operator between them.

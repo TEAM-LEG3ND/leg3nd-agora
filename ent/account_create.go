@@ -31,6 +31,14 @@ func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
 	return ac
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableNickname(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetNickname(*s)
+	}
+	return ac
+}
+
 // SetFullName sets the "full_name" field.
 func (ac *AccountCreate) SetFullName(s string) *AccountCreate {
 	ac.mutation.SetFullName(s)
@@ -40,6 +48,12 @@ func (ac *AccountCreate) SetFullName(s string) *AccountCreate {
 // SetOauthProvider sets the "oauth_provider" field.
 func (ac *AccountCreate) SetOauthProvider(ap account.OauthProvider) *AccountCreate {
 	ac.mutation.SetOauthProvider(ap)
+	return ac
+}
+
+// SetStatus sets the "status" field.
+func (ac *AccountCreate) SetStatus(a account.Status) *AccountCreate {
+	ac.mutation.SetStatus(a)
 	return ac
 }
 
@@ -86,9 +100,6 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "Account.email"`)}
 	}
-	if _, ok := ac.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
-	}
 	if _, ok := ac.mutation.FullName(); !ok {
 		return &ValidationError{Name: "full_name", err: errors.New(`ent: missing required field "Account.full_name"`)}
 	}
@@ -98,6 +109,14 @@ func (ac *AccountCreate) check() error {
 	if v, ok := ac.mutation.OauthProvider(); ok {
 		if err := account.OauthProviderValidator(v); err != nil {
 			return &ValidationError{Name: "oauth_provider", err: fmt.Errorf(`ent: validator failed for field "Account.oauth_provider": %w`, err)}
+		}
+	}
+	if _, ok := ac.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Account.status"`)}
+	}
+	if v, ok := ac.mutation.Status(); ok {
+		if err := account.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Account.status": %w`, err)}
 		}
 	}
 	return nil
@@ -138,7 +157,7 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := ac.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
+		_node.Nickname = &value
 	}
 	if value, ok := ac.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)
@@ -147,6 +166,10 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
 		_node.OauthProvider = value
+	}
+	if value, ok := ac.mutation.Status(); ok {
+		_spec.SetField(account.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
 	}
 	return _node, _spec
 }

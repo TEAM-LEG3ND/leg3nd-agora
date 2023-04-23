@@ -26,3 +26,13 @@ Content-Type: application/json
 ### Find Account By Email
 
 GET http://localhost:8080/v1/email/safasmp31le@gmail.com
+
+### Update Account
+
+PATCH http://localhost:8080/v1/2
+Content-Type: application/json
+
+{
+  "nickname": "맛있다",
+  "status": "ok"
+}

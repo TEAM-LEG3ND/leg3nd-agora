@@ -24,7 +24,6 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 
 	newAccount, err := co.service.CreateAccount(c.Context(),
 		newAccountRequest.Email,
-		newAccountRequest.Nickname,
 		newAccountRequest.FullName,
 		newAccountRequest.OAuthProvider,
 	)
@@ -35,6 +34,35 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 	newAccountResponse := &response.NewAccountResponse{Id: newAccount.Id}
 
 	return c.JSON(newAccountResponse)
+}
+
+func (co *AccountHandlers) UpdateAccount(c *fiber.Ctx) error {
+	var updateAccountRequestParam request.UpdateAccountRequestParam
+	var updateAccountRequestBody *request.UpdateAccountRequestBody
+
+	if err := c.ParamsParser(&updateAccountRequestParam); err != nil {
+		return c.Status(400).JSON(fiber.Map{"message": "Invalid id param"})
+	}
+	if err := c.BodyParser(&updateAccountRequestBody); err != nil {
+		return c.Status(400).JSON(fiber.Map{"message": "Invalid update account body"})
+	}
+
+	updatedAccount, err := co.service.UpdateAccount(
+		c.Context(),
+		updateAccountRequestParam.Id,
+		updateAccountRequestBody.Email,
+		updateAccountRequestBody.FullName,
+		updateAccountRequestBody.Nickname,
+		updateAccountRequestBody.OAuthProvider,
+		updateAccountRequestBody.Status,
+	)
+	if err != nil {
+		return c.SendStatus(500)
+	}
+
+	updatedAccountResponse := &response.UpdatedAccountResponse{Id: updatedAccount.Id}
+
+	return c.JSON(updatedAccountResponse)
 }
 
 func (co *AccountHandlers) FindAccountById(c *fiber.Ctx) error {

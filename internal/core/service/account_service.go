@@ -19,26 +19,54 @@ func ProvideAccountService(repository ports.AccountRepository) *AccountService {
 	return &AccountService{repository: repository}
 }
 
-func (s *AccountService) CreateAccount(ctx context.Context, email string, nickname string, fullName string, oAuthProvider domain.OAuthProvider) (*domain.Account, error) {
+func (s *AccountService) CreateAccount(ctx context.Context, email string, fullName string, oAuthProvider domain.OAuthProvider) (*domain.Account, error) {
 	// TODO: add proper validation
-	if nickname == "" {
-		return nil, fmt.Errorf("nickname is not provided")
-	} else {
-		if exist, err := s.checkNicknameExists(ctx, nickname); err != nil {
-			return nil, fmt.Errorf("nickname duplication check failed, nickname: %s", nickname)
-		} else if exist {
-			return nil, fmt.Errorf("nickname %s already exists", nickname)
-		}
-	}
-	log.Println(nickname)
-	newAccount := domain.NewAccount(email, nickname, fullName, oAuthProvider)
+	newAccount := domain.NewAccount(email, fullName, oAuthProvider)
 
-	savedAccount, err := s.repository.Save(ctx, newAccount)
+	savedAccount, err := s.repository.Create(ctx, newAccount)
 	if err != nil {
 		return nil, fmt.Errorf("error creating new account: %w", err)
 	}
 
 	return savedAccount, nil
+}
+
+func (s *AccountService) UpdateAccount(
+	ctx context.Context,
+	id int64,
+	email *string,
+	fullName *string,
+	nickname *string,
+	oAuthProvider *domain.OAuthProvider,
+	status *domain.Status,
+) (*domain.Account, error) {
+	account, err := s.repository.FindById(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("error occurred when find user by id: %d", id)
+	}
+
+	if email != nil {
+		account.Email = *email
+	}
+	if fullName != nil {
+		account.FullName = *fullName
+	}
+	if nickname != nil {
+		account.Nickname = nickname
+	}
+	if oAuthProvider != nil {
+		account.OAuthProvider = *oAuthProvider
+	}
+	if status != nil {
+		account.Status = *status
+	}
+
+	updatedAccount, err := s.repository.Update(ctx, account)
+	if err != nil {
+		return nil, fmt.Errorf("error while updating new account: %w", err)
+	}
+
+	return updatedAccount, nil
 }
 
 func (s *AccountService) FindAccountById(ctx context.Context, id int64) (*domain.Account, error) {

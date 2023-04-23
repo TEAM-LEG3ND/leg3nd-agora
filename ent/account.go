@@ -18,11 +18,13 @@ type Account struct {
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
 	// Nickname holds the value of the "nickname" field.
-	Nickname string `json:"nickname,omitempty"`
+	Nickname *string `json:"nickname,omitempty"`
 	// FullName holds the value of the "full_name" field.
 	FullName string `json:"full_name,omitempty"`
 	// OauthProvider holds the value of the "oauth_provider" field.
 	OauthProvider account.OauthProvider `json:"oauth_provider,omitempty"`
+	// Status holds the value of the "status" field.
+	Status account.Status `json:"status,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -32,7 +34,7 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case account.FieldID:
 			values[i] = new(sql.NullInt64)
-		case account.FieldEmail, account.FieldNickname, account.FieldFullName, account.FieldOauthProvider:
+		case account.FieldEmail, account.FieldNickname, account.FieldFullName, account.FieldOauthProvider, account.FieldStatus:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Account", columns[i])
@@ -65,7 +67,8 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				a.Nickname = value.String
+				a.Nickname = new(string)
+				*a.Nickname = value.String
 			}
 		case account.FieldFullName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -78,6 +81,12 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field oauth_provider", values[i])
 			} else if value.Valid {
 				a.OauthProvider = account.OauthProvider(value.String)
+			}
+		case account.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				a.Status = account.Status(value.String)
 			}
 		}
 	}
@@ -110,14 +119,19 @@ func (a *Account) String() string {
 	builder.WriteString("email=")
 	builder.WriteString(a.Email)
 	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(a.Nickname)
+	if v := a.Nickname; v != nil {
+		builder.WriteString("nickname=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("full_name=")
 	builder.WriteString(a.FullName)
 	builder.WriteString(", ")
 	builder.WriteString("oauth_provider=")
 	builder.WriteString(fmt.Sprintf("%v", a.OauthProvider))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", a.Status))
 	builder.WriteByte(')')
 	return builder.String()
 }

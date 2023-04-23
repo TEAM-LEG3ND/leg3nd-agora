@@ -39,6 +39,20 @@ func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
 	return au
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableNickname(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetNickname(*s)
+	}
+	return au
+}
+
+// ClearNickname clears the value of the "nickname" field.
+func (au *AccountUpdate) ClearNickname() *AccountUpdate {
+	au.mutation.ClearNickname()
+	return au
+}
+
 // SetFullName sets the "full_name" field.
 func (au *AccountUpdate) SetFullName(s string) *AccountUpdate {
 	au.mutation.SetFullName(s)
@@ -48,6 +62,12 @@ func (au *AccountUpdate) SetFullName(s string) *AccountUpdate {
 // SetOauthProvider sets the "oauth_provider" field.
 func (au *AccountUpdate) SetOauthProvider(ap account.OauthProvider) *AccountUpdate {
 	au.mutation.SetOauthProvider(ap)
+	return au
+}
+
+// SetStatus sets the "status" field.
+func (au *AccountUpdate) SetStatus(a account.Status) *AccountUpdate {
+	au.mutation.SetStatus(a)
 	return au
 }
 
@@ -90,6 +110,11 @@ func (au *AccountUpdate) check() error {
 			return &ValidationError{Name: "oauth_provider", err: fmt.Errorf(`ent: validator failed for field "Account.oauth_provider": %w`, err)}
 		}
 	}
+	if v, ok := au.mutation.Status(); ok {
+		if err := account.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Account.status": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -111,11 +136,17 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
+	if au.mutation.NicknameCleared() {
+		_spec.ClearField(account.FieldNickname, field.TypeString)
+	}
 	if value, ok := au.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := au.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
+	}
+	if value, ok := au.mutation.Status(); ok {
+		_spec.SetField(account.FieldStatus, field.TypeEnum, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -149,6 +180,20 @@ func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
 	return auo
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableNickname(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetNickname(*s)
+	}
+	return auo
+}
+
+// ClearNickname clears the value of the "nickname" field.
+func (auo *AccountUpdateOne) ClearNickname() *AccountUpdateOne {
+	auo.mutation.ClearNickname()
+	return auo
+}
+
 // SetFullName sets the "full_name" field.
 func (auo *AccountUpdateOne) SetFullName(s string) *AccountUpdateOne {
 	auo.mutation.SetFullName(s)
@@ -158,6 +203,12 @@ func (auo *AccountUpdateOne) SetFullName(s string) *AccountUpdateOne {
 // SetOauthProvider sets the "oauth_provider" field.
 func (auo *AccountUpdateOne) SetOauthProvider(ap account.OauthProvider) *AccountUpdateOne {
 	auo.mutation.SetOauthProvider(ap)
+	return auo
+}
+
+// SetStatus sets the "status" field.
+func (auo *AccountUpdateOne) SetStatus(a account.Status) *AccountUpdateOne {
+	auo.mutation.SetStatus(a)
 	return auo
 }
 
@@ -213,6 +264,11 @@ func (auo *AccountUpdateOne) check() error {
 			return &ValidationError{Name: "oauth_provider", err: fmt.Errorf(`ent: validator failed for field "Account.oauth_provider": %w`, err)}
 		}
 	}
+	if v, ok := auo.mutation.Status(); ok {
+		if err := account.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Account.status": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -251,11 +307,17 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	if value, ok := auo.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
+	if auo.mutation.NicknameCleared() {
+		_spec.ClearField(account.FieldNickname, field.TypeString)
+	}
 	if value, ok := auo.mutation.FullName(); ok {
 		_spec.SetField(account.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
+	}
+	if value, ok := auo.mutation.Status(); ok {
+		_spec.SetField(account.FieldStatus, field.TypeEnum, value)
 	}
 	_node = &Account{config: auo.config}
 	_spec.Assign = _node.assignValues
