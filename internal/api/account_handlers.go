@@ -24,7 +24,6 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 
 	newAccount, err := co.service.CreateAccount(c.Context(),
 		newAccountRequest.Email,
-		newAccountRequest.Nickname,
 		newAccountRequest.FullName,
 		newAccountRequest.OAuthProvider,
 	)
@@ -35,6 +34,31 @@ func (co *AccountHandlers) CreateAccount(c *fiber.Ctx) error {
 	newAccountResponse := &response.NewAccountResponse{Id: newAccount.Id}
 
 	return c.JSON(newAccountResponse)
+}
+
+func (co *AccountHandlers) UpdateAccount(c *fiber.Ctx) error {
+	var updateAccountRequest *request.UpdateAccountRequest
+
+	if err := c.BodyParser(&updateAccountRequest); err != nil {
+		return c.SendStatus(400)
+	}
+
+	updatedAccount, err := co.service.UpdateAccount(
+		c.Context(),
+		updateAccountRequest.Id,
+		updateAccountRequest.Email,
+		updateAccountRequest.FullName,
+		updateAccountRequest.Nickname,
+		updateAccountRequest.OAuthProvider,
+		updateAccountRequest.Status,
+	)
+	if err != nil {
+		return c.SendStatus(500)
+	}
+
+	updatedAccountResponse := &response.UpdatedAccountResponse{Id: updatedAccount.Id}
+
+	return c.JSON(updatedAccountResponse)
 }
 
 func (co *AccountHandlers) FindAccountById(c *fiber.Ctx) error {
