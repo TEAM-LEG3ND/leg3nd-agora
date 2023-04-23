@@ -36,6 +36,7 @@ type AccountMutation struct {
 	nickname       *string
 	full_name      *string
 	oauth_provider *account.OauthProvider
+	status         *account.Status
 	clearedFields  map[string]struct{}
 	done           bool
 	oldValue       func(context.Context) (*Account, error)
@@ -290,6 +291,42 @@ func (m *AccountMutation) ResetOauthProvider() {
 	m.oauth_provider = nil
 }
 
+// SetStatus sets the "status" field.
+func (m *AccountMutation) SetStatus(a account.Status) {
+	m.status = &a
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *AccountMutation) Status() (r account.Status, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Account entity.
+// If the Account object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AccountMutation) OldStatus(ctx context.Context) (v account.Status, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *AccountMutation) ResetStatus() {
+	m.status = nil
+}
+
 // Where appends a list predicates to the AccountMutation builder.
 func (m *AccountMutation) Where(ps ...predicate.Account) {
 	m.predicates = append(m.predicates, ps...)
@@ -324,7 +361,7 @@ func (m *AccountMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AccountMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.email != nil {
 		fields = append(fields, account.FieldEmail)
 	}
@@ -336,6 +373,9 @@ func (m *AccountMutation) Fields() []string {
 	}
 	if m.oauth_provider != nil {
 		fields = append(fields, account.FieldOauthProvider)
+	}
+	if m.status != nil {
+		fields = append(fields, account.FieldStatus)
 	}
 	return fields
 }
@@ -353,6 +393,8 @@ func (m *AccountMutation) Field(name string) (ent.Value, bool) {
 		return m.FullName()
 	case account.FieldOauthProvider:
 		return m.OauthProvider()
+	case account.FieldStatus:
+		return m.Status()
 	}
 	return nil, false
 }
@@ -370,6 +412,8 @@ func (m *AccountMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldFullName(ctx)
 	case account.FieldOauthProvider:
 		return m.OldOauthProvider(ctx)
+	case account.FieldStatus:
+		return m.OldStatus(ctx)
 	}
 	return nil, fmt.Errorf("unknown Account field %s", name)
 }
@@ -406,6 +450,13 @@ func (m *AccountMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOauthProvider(v)
+		return nil
+	case account.FieldStatus:
+		v, ok := value.(account.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Account field %s", name)
@@ -467,6 +518,9 @@ func (m *AccountMutation) ResetField(name string) error {
 		return nil
 	case account.FieldOauthProvider:
 		m.ResetOauthProvider()
+		return nil
+	case account.FieldStatus:
+		m.ResetStatus()
 		return nil
 	}
 	return fmt.Errorf("unknown Account field %s", name)

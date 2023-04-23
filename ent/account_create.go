@@ -43,6 +43,12 @@ func (ac *AccountCreate) SetOauthProvider(ap account.OauthProvider) *AccountCrea
 	return ac
 }
 
+// SetStatus sets the "status" field.
+func (ac *AccountCreate) SetStatus(a account.Status) *AccountCreate {
+	ac.mutation.SetStatus(a)
+	return ac
+}
+
 // SetID sets the "id" field.
 func (ac *AccountCreate) SetID(i int64) *AccountCreate {
 	ac.mutation.SetID(i)
@@ -100,6 +106,14 @@ func (ac *AccountCreate) check() error {
 			return &ValidationError{Name: "oauth_provider", err: fmt.Errorf(`ent: validator failed for field "Account.oauth_provider": %w`, err)}
 		}
 	}
+	if _, ok := ac.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Account.status"`)}
+	}
+	if v, ok := ac.mutation.Status(); ok {
+		if err := account.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Account.status": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -147,6 +161,10 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.OauthProvider(); ok {
 		_spec.SetField(account.FieldOauthProvider, field.TypeEnum, value)
 		_node.OauthProvider = value
+	}
+	if value, ok := ac.mutation.Status(); ok {
+		_spec.SetField(account.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
 	}
 	return _node, _spec
 }

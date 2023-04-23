@@ -15,6 +15,7 @@ var (
 		{Name: "nickname", Type: field.TypeString},
 		{Name: "full_name", Type: field.TypeString},
 		{Name: "oauth_provider", Type: field.TypeEnum, Enums: []string{"google"}},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"draft", "ok", "suspended", "withdraw"}},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
 	AccountsTable = &schema.Table{

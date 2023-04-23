@@ -23,6 +23,8 @@ type Account struct {
 	FullName string `json:"full_name,omitempty"`
 	// OauthProvider holds the value of the "oauth_provider" field.
 	OauthProvider account.OauthProvider `json:"oauth_provider,omitempty"`
+	// Status holds the value of the "status" field.
+	Status account.Status `json:"status,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -32,7 +34,7 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case account.FieldID:
 			values[i] = new(sql.NullInt64)
-		case account.FieldEmail, account.FieldNickname, account.FieldFullName, account.FieldOauthProvider:
+		case account.FieldEmail, account.FieldNickname, account.FieldFullName, account.FieldOauthProvider, account.FieldStatus:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Account", columns[i])
@@ -79,6 +81,12 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.OauthProvider = account.OauthProvider(value.String)
 			}
+		case account.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				a.Status = account.Status(value.String)
+			}
 		}
 	}
 	return nil
@@ -118,6 +126,9 @@ func (a *Account) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("oauth_provider=")
 	builder.WriteString(fmt.Sprintf("%v", a.OauthProvider))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", a.Status))
 	builder.WriteByte(')')
 	return builder.String()
 }

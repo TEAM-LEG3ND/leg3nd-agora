@@ -19,6 +19,8 @@ const (
 	FieldFullName = "full_name"
 	// FieldOauthProvider holds the string denoting the oauth_provider field in the database.
 	FieldOauthProvider = "oauth_provider"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// Table holds the table name of the account in the database.
 	Table = "accounts"
 )
@@ -30,6 +32,7 @@ var Columns = []string{
 	FieldNickname,
 	FieldFullName,
 	FieldOauthProvider,
+	FieldStatus,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -61,5 +64,30 @@ func OauthProviderValidator(op OauthProvider) error {
 		return nil
 	default:
 		return fmt.Errorf("account: invalid enum value for oauth_provider field: %q", op)
+	}
+}
+
+// Status defines the type for the "status" enum field.
+type Status string
+
+// Status values.
+const (
+	StatusDraft     Status = "draft"
+	StatusOk        Status = "ok"
+	StatusSuspended Status = "suspended"
+	StatusWithdraw  Status = "withdraw"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusDraft, StatusOk, StatusSuspended, StatusWithdraw:
+		return nil
+	default:
+		return fmt.Errorf("account: invalid enum value for status field: %q", s)
 	}
 }
