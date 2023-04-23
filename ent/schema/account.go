@@ -19,6 +19,8 @@ func (Account) Fields() []ent.Field {
 		field.String("full_name"),
 		field.Enum("oauth_provider").
 			Values("google"),
+		field.Enum("status").
+			Values("draft", "ok", "suspended", "withdraw"),
 	}
 }
 
