@@ -31,6 +31,44 @@ func (s *AccountService) CreateAccount(ctx context.Context, email string, fullNa
 	return savedAccount, nil
 }
 
+func (s *AccountService) UpdateAccount(
+	ctx context.Context,
+	id int64,
+	email *string,
+	fullName *string,
+	nickname *string,
+	oAuthProvider *domain.OAuthProvider,
+	status *domain.Status,
+) (*domain.Account, error) {
+	account, err := s.repository.FindById(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("error occurred when find user by id: %d", id)
+	}
+
+	if email != nil {
+		account.Email = *email
+	}
+	if fullName != nil {
+		account.FullName = *fullName
+	}
+	if nickname != nil {
+		account.Nickname = nickname
+	}
+	if oAuthProvider != nil {
+		account.OAuthProvider = *oAuthProvider
+	}
+	if status != nil {
+		account.Status = *status
+	}
+
+	updatedAccount, err := s.repository.Update(ctx, account)
+	if err != nil {
+		return nil, fmt.Errorf("error while updating new account: %w", err)
+	}
+
+	return updatedAccount, nil
+}
+
 func (s *AccountService) FindAccountById(ctx context.Context, id int64) (*domain.Account, error) {
 	if acc, err := s.repository.FindById(ctx, id); err != nil {
 		return nil, fmt.Errorf("error finding account by id: %w", err)
