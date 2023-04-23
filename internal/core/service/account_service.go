@@ -19,21 +19,11 @@ func ProvideAccountService(repository ports.AccountRepository) *AccountService {
 	return &AccountService{repository: repository}
 }
 
-func (s *AccountService) CreateAccount(ctx context.Context, email string, nickname string, fullName string, oAuthProvider domain.OAuthProvider) (*domain.Account, error) {
+func (s *AccountService) CreateAccount(ctx context.Context, email string, fullName string, oAuthProvider domain.OAuthProvider) (*domain.Account, error) {
 	// TODO: add proper validation
-	if nickname == "" {
-		return nil, fmt.Errorf("nickname is not provided")
-	} else {
-		if exist, err := s.checkNicknameExists(ctx, nickname); err != nil {
-			return nil, fmt.Errorf("nickname duplication check failed, nickname: %s", nickname)
-		} else if exist {
-			return nil, fmt.Errorf("nickname %s already exists", nickname)
-		}
-	}
-	log.Println(nickname)
-	newAccount := domain.NewAccount(email, nickname, fullName, oAuthProvider)
+	newAccount := domain.NewAccount(email, fullName, oAuthProvider)
 
-	savedAccount, err := s.repository.Save(ctx, newAccount)
+	savedAccount, err := s.repository.Create(ctx, newAccount)
 	if err != nil {
 		return nil, fmt.Errorf("error creating new account: %w", err)
 	}
