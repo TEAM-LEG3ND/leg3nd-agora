@@ -91,6 +91,7 @@ func (r *AccountRepository) FindById(ctx context.Context, accountId int64) (*dom
 		Nickname:      ac.Nickname,
 		FullName:      ac.FullName,
 		OAuthProvider: domain.OAuthProvider(ac.OauthProvider),
+		Status:        domain.Status(ac.Status),
 	}
 
 	return &domainAccount, nil
@@ -108,6 +109,7 @@ func (r *AccountRepository) FindByEmail(ctx context.Context, email string) (*dom
 		Nickname:      ac.Nickname,
 		FullName:      ac.FullName,
 		OAuthProvider: domain.OAuthProvider(ac.OauthProvider),
+		Status:        domain.Status(ac.Status),
 	}
 
 	return &domainAccount, nil
