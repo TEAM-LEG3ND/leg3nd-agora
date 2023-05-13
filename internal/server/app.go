@@ -6,6 +6,7 @@ import (
 	"leg3nd-agora/internal/api"
 	"leg3nd-agora/internal/core/service"
 	"leg3nd-agora/internal/repository"
+	"leg3nd-agora/internal/server/middleware/internalchecker"
 	"log"
 )
 
@@ -16,12 +17,16 @@ func ProvideApp(accountHandler *api.AccountHandlers) *fiber.App {
 	app.Get("/ping", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("pong")
 	})
-	v1 := app.Group("/v1")
 
-	v1.Post("", accountHandler.CreateAccount)
-	v1.Get("/:id", accountHandler.FindAccountById)
-	v1.Patch("/:id", accountHandler.UpdateAccount)
-	v1.Get("/email/:email", accountHandler.FindAccountByEmail)
+	internal := app.Group("/internal")
+	internal.Use(internalchecker.New())
+	internalV1 := internal.Group("/v1")
+	internalV1Account := internalV1.Group("/account")
+
+	internalV1Account.Post("", accountHandler.CreateAccount)
+	internalV1Account.Get("/:id", accountHandler.FindAccountById)
+	internalV1Account.Patch("/:id", accountHandler.UpdateAccount)
+	internalV1Account.Get("/email/:email", accountHandler.FindAccountByEmail)
 
 	log.Println("Application is starting...")
 	return app
