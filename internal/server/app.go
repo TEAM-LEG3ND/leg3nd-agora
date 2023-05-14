@@ -18,6 +18,9 @@ func ProvideApp(accountHandler *api.AccountHandlers) *fiber.App {
 		return ctx.SendString("pong")
 	})
 
+	v1 := app.Group("/v1")
+	v1.Get("/test", accountHandler.TestGateway)
+
 	internal := app.Group("/internal")
 	internal.Use(internalchecker.New())
 	internalV1 := internal.Group("/v1")

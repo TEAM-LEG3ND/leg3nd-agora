@@ -100,3 +100,9 @@ func (co *AccountHandlers) FindAccountByEmail(c *fiber.Ctx) error {
 
 	return c.JSON(accountResponse)
 }
+
+func (co *AccountHandlers) TestGateway(c *fiber.Ctx) error {
+	headers := c.GetReqHeaders()
+
+	return c.JSON(headers)
+}
